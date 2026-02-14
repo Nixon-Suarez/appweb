@@ -1,30 +1,36 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <v-app>
+    <!-- menu -->
+    <v-app-bar class="bg-light-blue-darken-3">
+      <v-app-bar-title class="white--text">Sistema de Registro</v-app-bar-title>
+      <v-btn prepend-icon="mdi-home" to="/">Inicio</v-btn>
+      <v-btn prepend-icon="mdi-book-open-variant">
+        Administracion
+        <v-menu activator="parent">
+          <v-list>
+            <v-list-item to="/curso">
+              <v-list-item-title>Cursos</v-list-item-title>
+            </v-list-item>
+            <v-list-item to="/student">
+              <v-list-item-title>Estudiantes</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-btn>
+    </v-app-bar>
+    <v-main>
+      <router-view/>
+    </v-main>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
 
-nav {
-  padding: 30px;
-}
+export default {
+  name: 'App',
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
+  data: () => ({
+    //
+  }),
 }
-
-nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+</script>
