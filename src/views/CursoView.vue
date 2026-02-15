@@ -3,9 +3,9 @@
         <h1>Cursos</h1>
         <v-row>
             <v-col xs="12" sm="6" md="4" lg="3" xxl="3">
-                <v-text-field label="Nombre Curso" maxlength="50" color="indigo" clearable placeholder="Nombre Curso" counter variant="outlined"></v-text-field>
-                <v-textarea label="Descripcion" clearable counter maxlength="100" color="indigo" placeholder="Descripcion" variant="outlined"></v-textarea>
-                <v-btn prepend-icon="mdi-check" color="indigo" block="">
+                <v-text-field v-model="curso.name" label="Nombre Curso" maxlength="50" color="indigo" clearable placeholder="Nombre Curso" counter variant="outlined"></v-text-field>
+                <v-textarea v-model="curso.descripcion" label="Descripcion" clearable counter maxlength="100" color="indigo" placeholder="Descripcion" variant="outlined"></v-textarea>
+                <v-btn @click="registrarCurso" prepend-icon="mdi-check" color="indigo" block="">
                     Agregar
                 </v-btn>
             </v-col>
@@ -42,8 +42,46 @@
 </template>
 
 <script>
+import axios from 'axios';
+import Swal from 'sweetalert2';
+const API_URL = 'http://127.0.0.1:8000/api/';
 export default {
   name: "CursoView",
+  data(){
+    return {
+        curso: {}
+    }
+  },
+  methods: {
+    getAlert(texto){
+        Swal.fire({
+            title: 'Exito',
+            text: texto,
+            icon: 'success',
+            showCancelButton: false,
+            showConfirmButton: false,
+            timer: 1500 
+          })
+    },
+    registrarCurso(){
+        axios.post(API_URL + 'curso/insert', this.curso)
+        .then(response => {
+            if(response.data.code == 201){
+                this.getAlert(response.data.data);
+                this.curso = {};
+            }
+        })
+        .catch(function(error){
+            console.error("Error en la solicitud:", error);
+            Swal.fire(
+                "Error",
+                "Ocurrió un error en el servidor",
+                "error"
+            );
+        })
+    }
+  }
+  
 };
 
 </script>
