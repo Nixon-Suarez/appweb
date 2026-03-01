@@ -2,11 +2,17 @@ import { createRouter, createWebHistory } from 'vue-router'
 import InicioView from '../views/InicioView.vue'
 import CursoView from '../views/CursoView.vue'
 import StudentView from '../views/StudentView.vue'
+import LoginView from '../views/LoginView.vue'
 
 
 const routes = [
   {
     path: '/',
+    name: 'login',
+    component: LoginView
+  },
+  {
+    path: '/inicio',
     name: 'inicio',
     component: InicioView
   },

@@ -79,7 +79,13 @@ export default {
         ],
         modal1: false,
         modal2: false,
-        datos: ref({})
+        datos: ref({}),
+        // configuracion de la cabecera de la solicitud con el token de autenticacion
+        config: {
+            headers: {
+                'Authorization': 'Bearer ' + this.$store.getters.getToken
+            }
+        }
     }
   },
   methods: {
@@ -94,7 +100,7 @@ export default {
           })
     },
     registrarCurso(){
-        axios.post(API_URL + 'curso/insert', this.curso)
+        axios.post(API_URL + 'curso/insert', this.curso, this.config)
         .then(response => {
             if(response.data.code == 201){
                 this.getAlert(response.data.data);
@@ -113,7 +119,7 @@ export default {
     },
     obtenerCursos(){
         this.cursos = [];
-        axios.get(API_URL + 'curso/select')
+        axios.get(API_URL + 'curso/select', this.config)
         .then(response => {
             let res = response.data;
             if(res.code == 200){
@@ -142,7 +148,7 @@ export default {
         }else {
             this.modal2 = true;
         }
-        axios.get(API_URL + 'curso/find/' + id)
+        axios.get(API_URL + 'curso/find/' + id, this.config)
         .then(response => {
             let res = response.data;
             if(res.code == 200){
@@ -175,7 +181,7 @@ export default {
             confirmButtonText: 'Sí, eliminarlo!'
           }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(API_URL + 'curso/delete/' + id)
+                axios.delete(API_URL + 'curso/delete/' + id, this.config)
                 .then(response => {
                     let res = response.data;
                     if(res.code == 200){
@@ -202,7 +208,30 @@ export default {
     },
     actualizarCurso(id){
         console.log(id);
-        axios.put(API_URL + 'curso/update/' + id, this.datos)
+        axios.put(API_URL + 'curso/update/' + id, this.datos, this.config)
+        .then(response => {
+            let res = response.data;
+            this.modal2 = false;
+            if(res.code == 200){
+                this.getAlert(res.data);
+                this.datos = {};
+                this.obtenerCursos();
+                this.modal2 = false;
+            }else{
+                Swal.fire(
+                    "Error",
+                    res.data,
+                    "error"
+                );
+            }
+        }).catch(function(error){
+            console.error("Error en la solicitud:", error);
+            Swal.fire(
+                "Error",
+                "Ocurrió un error en el servidor",
+                "error"
+            );
+        })
     }
   },
   created(){
